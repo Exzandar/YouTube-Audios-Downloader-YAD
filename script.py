@@ -1,20 +1,29 @@
 from pytube import YouTube, Playlist
+from progressbar import ProgressBar
+
+
+def prog_check(stream = None, chunk = None, remaining = None):
+    x = round((siz-remaining)/siz*100, 2)
+    bar.update(x)
 
 
 def single_aud(url):
-    audio = YouTube(url)
+    audio = YouTube(url, on_progress_callback=prog_check)
     stream = audio.streams.get_audio_only()
     print("Title: {}".format(audio.title))
     print("Size: ", round(stream.filesize/1024/1024, 2), "Mb")
-    d = input("Do you want to download this? write (yes/no) or write (exit) to exit: ")
+    global siz
+    siz = stream.filesize
+    d = input("Do you want to download this in D:/exzandar/? write (yes/no) or write (exit) to exit: ")
     if d == "yes":
-        stream.download("D:/exzandar/") # don't forget to change that to your directory!
-        print("audio: {} Downloaded in D:/exzandar/".format(audio.title))
+        bar.start(max_value=100)
+        stream.download("D:/exzandar/")
     elif d == "no":
         print("This audio won't be downloaded! ")
     else:
-        print("Bye Idiot! ")
-        exit(0)
+        print("\nBye Idiot! \n")
+        exit()
+
 
 def list_aud(url):
     list = Playlist(url)
@@ -25,11 +34,14 @@ def list_aud(url):
         single_aud(vid)
         print("\n\n")
 
-url = input("\nEnter the full URL: ")
-what = ""
-if "list" in url:
-    print("\nNote: this is a playlist not a single audio! ")
-    list_aud(url)
-else:
-    print("\nNote: this is a single audio! ")
-    single_aud(url)
+
+if __name__ == '__main__':
+    bar = ProgressBar()
+    url = input("\nEnter the full URL: ")
+    what = ""
+    if "list" in url:
+        print("\nNote: this is a playlist not a single audio! ")
+        list_aud(url)
+    else:
+        print("\nNote: this is a single audio! ")
+        single_aud(url)
