@@ -5,7 +5,7 @@ import subprocess
 import datetime
 import re
 
-link = "https://www.youtube.com/watch?v=WwB5w-Rt88k"
+
 bar = ProgressBar()
 
 def merge_and_output():
